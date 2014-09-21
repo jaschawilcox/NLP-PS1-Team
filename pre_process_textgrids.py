@@ -47,8 +47,6 @@ def write_tg(tg, filename="./test_tg.csv"):
 
     convert_cells_to_floats(table_csv)
     
-    print table_csv[:10]
-
     # sort by starting time
     sorted_table = sorted(table_csv, key=operator.itemgetter(1))
     #print sorted_table
@@ -66,8 +64,8 @@ def write_tg(tg, filename="./test_tg.csv"):
             if row[3] != "{SL}" and row[3] != "sp":
                 iterator += 1
                 # print timestamps
-                time = str(row[1]) + " - " + str(row[2])
-                export.append([time, row[0], str(row[3])])
+                #time = str(row[1]) + " - " + str(row[2])
+                export.append([row[0], row[3]])
                 prev_speaker = row[0]
             else:
                 print "{SL} or sp on its own"
@@ -76,14 +74,14 @@ def write_tg(tg, filename="./test_tg.csv"):
     export.insert(0, export.pop())
 
     with open(filename, 'w') as out:
-        writer = csv.writer(out, delimiter="\t", quotechar="\"")
+        writer = csv.writer(out, delimiter='\t', quotechar='\"')
         for row in export:
             writer.writerow(row)
 
-    with open("./test_sort.csv", 'w') as out:
-        writer = csv.writer(out, delimiter="\t", quotechar="\"")
-        for row in sorted_table:
-            writer.writerow(row)
+    #with open("./test_sort.csv", 'w') as out:
+        #writer = csv.writer(out, delimiter='\t', quotechar='\"')
+        #for row in sorted_table:
+            #writer.writerow(row)
 
 def process_dir_tg(input_dir, output_dir):
     for f in os.listdir(input_dir):
