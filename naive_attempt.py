@@ -1,16 +1,16 @@
 """
-A naive attempt at categorizing speakers.
+Understanding the data set
 """
 import sys
 import getopt
 from nltk.corpus.reader import CategorizedPlaintextCorpusReader
 from itertools import cycle
-import textgrid
 import nltk.probability
 
 
-def process_plaintext():
-    reader = CategorizedPlaintextCorpusReader('./ps16_dev_data/plain_text/AS1_split_fac_part_plain_text', r'.*\.txt', cat_pattern=r'.+_.+_(.*)\.txt')
+def process_plaintext(dir_path):
+    reader = CategorizedPlaintextCorpusReader(dir_path,
+                    r'.*\.txt', cat_pattern=r'.+_.+_(.*)\.txt')
     facilitator_files = reader.fileids(categories='facilitator')
     participant_files = reader.fileids(categories='participant')
     print facilitator_files, participant_files
@@ -55,9 +55,6 @@ def edit_tokens (input_words):
     return input_words
 
 
-def process_textgrid():
-    print ""
-
 def main(argv):
     # parse command line options
     try:
@@ -75,15 +72,8 @@ def main(argv):
         if o in ("-h", "--help"):
             print __doc__
             sys.exit(0)
-        if o in ("-w", "--wiki"):
-            print "Using wiki..."
-            sys.exit(0)
 
-    # process arguments
-    #for arg in args:
-        #process(arg) # process() is defined elsewhere
-
-    process_plaintext()
+    process_plaintext('./ps16_dev_data/plain_text/AS1_split_fac_part_plain_text')
 
 if __name__ == "__main__":
     # first argv is the script name, which we don't care about
