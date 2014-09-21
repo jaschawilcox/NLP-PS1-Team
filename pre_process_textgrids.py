@@ -85,7 +85,7 @@ def write_tg(tg, filename="./test_tg.csv"):
 
 def process_dir_tg(input_dir, output_dir):
     for f in os.listdir(input_dir):
-        if f.endswith("TextGrid"):
+        if f.endswith("TextGrid") and f.startswith("AS1"):
             print f
             input_path = os.path.join(input_dir, f)
             tg = get_tg(input_path)
