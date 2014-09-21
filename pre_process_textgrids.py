@@ -66,8 +66,11 @@ def write_tg(tg, filename="./test_tg.csv"):
             else:
                 print "{SL} on its own"
 
+    # move header row back to top
+    export.insert(0, export.pop())
+
     with open(filename, 'w') as out:
-        writer = csv.writer(out, delimiter=",")
+        writer = csv.writer(out, delimiter=",", quotechar="\"")
         for row in export:
             writer.writerow(row)
 
