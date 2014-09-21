@@ -45,6 +45,10 @@ def write_tg(tg, filename="./test_tg.csv"):
     for row in table_csv:
         del row[1]
 
+    convert_cells_to_floats(table_csv)
+    
+    print table_csv[:10]
+
     # sort by starting time
     sorted_table = sorted(table_csv, key=operator.itemgetter(1))
     #print sorted_table
@@ -55,23 +59,30 @@ def write_tg(tg, filename="./test_tg.csv"):
     # combine adjacent speech rows into a string
     for row in sorted_table:
         if row[0] == prev_speaker:
-            speech = " " + row[3]
+            speech = " " + str(row[3])
             export[iterator][1] += speech
         else:
             # Silence on it's own doesn't tell us anything
-            if row[3] != "{SL}":
+            if row[3] != "{SL}" and row[3] != "sp":
                 iterator += 1
-                export.append([row[0], row[3]])
+                # print timestamps
+                time = str(row[1]) + " - " + str(row[2])
+                export.append([time, row[0], str(row[3])])
                 prev_speaker = row[0]
             else:
-                print "{SL} on its own"
+                print "{SL} or sp on its own"
 
     # move header row back to top
     export.insert(0, export.pop())
 
     with open(filename, 'w') as out:
-        writer = csv.writer(out, delimiter=",", quotechar="\"")
+        writer = csv.writer(out, delimiter="\t", quotechar="\"")
         for row in export:
+            writer.writerow(row)
+
+    with open("./test_sort.csv", 'w') as out:
+        writer = csv.writer(out, delimiter="\t", quotechar="\"")
+        for row in sorted_table:
             writer.writerow(row)
 
 def process_dir_tg(input_dir, output_dir):
@@ -83,6 +94,19 @@ def process_dir_tg(input_dir, output_dir):
             output_filename = f[:-8] + "csv"
             output_path = os.path.join(output_dir, output_filename)
             write_tg(tg, output_path)
+
+def convert_cells_to_floats(csv_cont):
+    """ 
+    Converts cells to floats if possible
+    (modifies input CSV content list).
+    
+    """
+    for row in range(len(csv_cont)):
+        for cell in range(len(csv_cont[row])):
+            try:
+                csv_cont[row][cell] = float(csv_cont[row][cell])
+            except ValueError:
+                pass
 
 process_dir_tg("ps16_dev_data/TextGrids/", "./transcripts/")
 
