@@ -89,7 +89,7 @@ def process_dir_tg(input_dir, output_dir):
             print f
             input_path = os.path.join(input_dir, f)
             tg = get_tg(input_path)
-            output_filename = f[:-8] + "csv"
+            output_filename = f[:-8] + "tsv"
             output_path = os.path.join(output_dir, output_filename)
             write_tg(tg, output_path)
 
